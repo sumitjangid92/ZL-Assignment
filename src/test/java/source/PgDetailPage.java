@@ -17,7 +17,7 @@ public class PgDetailPage extends SeleniumBase {
 	By leftNavVisitIcon				= By.cssSelector("a[href='/visits'] span.fa-street-view");
 	By notyMessageNotification		= By.cssSelector(".noty_message span.noty_text");
 	By pgDetailPageTitle			= By.cssSelector("h1.pageTitle");
-	
+
 	//Schedule a visit
 	By scheduleVisitLink			= By.linkText("Schedule a Visit");
 	By visitDate					= By.name("visitDate");
@@ -31,7 +31,7 @@ public class PgDetailPage extends SeleniumBase {
 	By joinWaitListButton			= By.xpath("//button[text()='Join Waitlist'][not(contains(@class,'navbar'))]");
 	By twoSharingOfferContent		= By.xpath("//div[@class='offer-content']//strong[text()='2 Sharing']");
 	By bookingDate					= By.cssSelector("input[ng-model='booking.date']");
-	
+
 	By proceedToPayButton			= By.xpath("//button[text()='Proceed to Pay'][not(contains(@class,'navbar'))]");
 	By userNameTextBox				= By.name("fullname");
 	By userEmailTextBox				= By.xpath("//input[@name='email']");
@@ -46,16 +46,16 @@ public class PgDetailPage extends SeleniumBase {
 	By merchantName					= By.id("merchant-name");
 	By contactInput					= By.id("contact");
 	By netBankingOption				= By.cssSelector(".payment-option.item[tab='netbanking']");
-	
+
 	By walletOption					= By.cssSelector(".payment-option.item[tab='wallet']");
 	By walletOlaMoney				= By.xpath("//span[@class='title'][text()='Ola Money']");
 	By walletPayZapp				= By.xpath("//span[@class='title'][text()='PayZapp']");
 	By payButton					= By.cssSelector("button[type='submit']");
-	
+
 	By successButton				= By.cssSelector("button.success");
 	By returnHomeLink				= By.linkText("RETURN HOME");
 	By checkOutIframe				= By.cssSelector(".razorpay-checkout-frame");
-	
+
 	public void verifyPgDetailPageTitle(WebDriver driver, String text) {
 		waitUntilTextPresent(driver, pgDetailPageTitle, text);
 	}
@@ -64,7 +64,7 @@ public class PgDetailPage extends SeleniumBase {
 		clickElement(driver, scheduleVisitLink);
 		waitUntilVisible(driver, visitDate);
 	}
-	
+
 	public void openDatePickerForVisitDate(WebDriver driver) {
 		clickElement(driver, caretSign);
 	}
@@ -81,7 +81,7 @@ public class PgDetailPage extends SeleniumBase {
 		Select select = new Select(findElement(driver, visitTime));
 		select.selectByVisibleText(slotValue);
 	}
-	
+
 	public void clickScheduleVisit(WebDriver driver) {
 		clickElement(driver, scheduleAVisitButton);
 		waitUntilVisible(driver, notyMessageNotification);
@@ -92,24 +92,24 @@ public class PgDetailPage extends SeleniumBase {
 			System.out.println("Visit is scheduled successfully");
 		}
 	}
-	
+
 	public void openVisitsTab(WebDriver driver) {
 		clickElement(driver, leftNavVisitIcon);
 		waitUntilVisible(driver, notyMessageNotification);
 		waitUntilInvisible(driver, notyMessageNotification);
 	}	
-	
+
 	public void verifyingVisitInVisitTab(WebDriver driver) {
 		openVisitsTab(driver);
 		waitUntilVisible(driver, visitConfirmationWindow);
 	}
-	
+
 	public void clickRequestABedLink(WebDriver driver) {
 		clickElement(driver, requestABedLink);
 		waitUntilVisible(driver, twoSharingOfferContent);
 		waitUntilVisible(driver, joinWaitListButton);
 	}
-	
+
 	public void selectTwoSharing(WebDriver driver) {
 		clickElement(driver, twoSharingOfferContent);
 	}
@@ -120,12 +120,12 @@ public class PgDetailPage extends SeleniumBase {
 		findElement(driver, bookingDate).sendKeys(Keys.ARROW_RIGHT);
 		findElement(driver, bookingDate).sendKeys(Keys.ARROW_UP);
 	}
-	
+
 	public void clickProceedToPay(WebDriver driver) {
 		idleWait(2);
 		clickElement(driver, proceedToPayButton);
 	}
-	
+
 	public void verifyDetailsOnPaymentPage(WebDriver driver, String userName, String number, String email) {
 		waitUntilVisible(driver, userNameTextBox);
 		waitUntilVisible(driver, userEmailTextBox);
@@ -134,33 +134,30 @@ public class PgDetailPage extends SeleniumBase {
 		assertEquals(findElement(driver, userNumberTextBox).getAttribute("value").trim(), number.trim());
 		assertEquals(findElement(driver, userEmailTextBox).getAttribute("value").trim(), email.trim());
 	}
-	
+
 	public void makePayment(WebDriver driver) {
 		waitUntilInvisible(driver, notyMessageNotification);
 		clickElement(driver, makePayment);
 	}
-	
+
 	public boolean selectNetBankingOption(WebDriver driver) {
 		clickElement(driver, payByCreditOption );
-		try {
-			waitUntilVisible(driver, notyMessageNotification, 10);
-			if(findElement(driver, notyMessageNotification).getText().contains("User has already pre-booked")) {
-				System.out.println("PG is already booked");
-				return false;
-			}
-			return true;
-		} catch (Exception e) {
+		if(findElement(driver, notyMessageNotification)!=null && findElement(driver, notyMessageNotification).isDisplayed() && findElement(driver, notyMessageNotification).getText().contains("User has already pre-booked")) {
+			System.out.println("PG is already booked");
+			return false;
+		} else {
+			System.out.println("Going to book the pg");
 			switchToIframe(driver, checkOutIframe);
 			waitUntilVisible(driver, merchantName);
 			waitUntilTextPresent(driver, merchantName, "Zolo");
 			return true;
 		}
 	}
-	
+
 	public void enterContactNumber(WebDriver driver, String text) {
 		enterText(driver, contactInput, text);
 	}
-	
+
 	public void selectWalletPaymentOption(WebDriver driver) {
 		clickElement(driver, walletOption);
 		waitUntilVisible(driver, walletPayZapp);
@@ -175,13 +172,13 @@ public class PgDetailPage extends SeleniumBase {
 		clickElement(driver, payButton);
 		idleWait(3);
 	}
-	
+
 	public void clickSuccess(WebDriver driver) {
 		switchToTab(driver, 2);
 		clickElement(driver, successButton);
 		switchToTab(driver, 1);
 		waitUntilVisible(driver, returnHomeLink);		
 	}
-	
-	
+
+
 }

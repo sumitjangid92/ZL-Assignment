@@ -36,7 +36,6 @@ public class HomePage extends SeleniumBase {
 		waitUntilVisible(driver, testAccountLink);
 	}
 
-	
 	//This method is to enter the search term
 	public void enterSearchTerm(WebDriver driver, String searchTerm) {
 		enterText(driver, searchBar, searchTerm);

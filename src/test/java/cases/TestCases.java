@@ -1,5 +1,6 @@
 package cases;
 
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import base.SeleniumBase;
 import base.TestBase;
@@ -16,12 +17,16 @@ public class TestCases extends TestBase {
 	SearchPGsPage searchPGsPage = new SearchPGsPage(); 
 	PgDetailPage pgDetailPage = new PgDetailPage();
 	
+	@BeforeClass
+	public void loginToUser() {
+		loginPage.loginWithUser(driver, config.getProperty("user_phone_number"), config.getProperty("user_password"));
+	}
+	
 	// Part A
 	@Test(priority=0)
 	public void schedule_a_visit() {
 		
 		// 1. Open "http://52.201.90.154:9002/" >>
-		loginPage.loginWithUser(driver, config.getProperty("user_phone_number"), config.getProperty("user_password"));
 		homePage.searchWithTerm(driver, "Electronic", "Electronic City Phase II, Electronic City, Bengaluru, Karnataka, India");
 	
 		// 2. Verify the search result >>
@@ -48,7 +53,6 @@ public class TestCases extends TestBase {
 	public void booking_a_room() {
 		
 		// 1. Open "http://52.201.90.154:9002/" >>
-		loginPage.loginWithUser(driver, config.getProperty("user_phone_number"), config.getProperty("user_password"));
 		homePage.searchWithTerm(driver, "Electronic", "Electronic City Phase II, Electronic City, Bengaluru, Karnataka, India");
 	
 		// 2. Verify the search result >>
