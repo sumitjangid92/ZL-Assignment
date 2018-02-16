@@ -6,10 +6,6 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.interactions.internal.Coordinates;
-import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -38,6 +34,7 @@ public class SeleniumBase {
 			Assert.fail();
 		}
 	}
+	
 	public void waitUntilVisible(WebDriver driver, By locator){
 		try{
 			WebDriverWait wait = new WebDriverWait(driver, timeOutInSecs);
@@ -48,6 +45,17 @@ public class SeleniumBase {
 		}
 	}
 
+	public void waitUntilVisible(WebDriver driver, By locator, int time){
+		try{
+			WebDriverWait wait = new WebDriverWait(driver, time);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+		} catch (Exception e){
+			System.out.print(e.getMessage());
+			Assert.fail();
+		}
+	}
+
+	
 	public void waitUntilInvisible(WebDriver driver, By locator){
 		try{
 			WebDriverWait wait = new WebDriverWait(driver, timeOutInSecs);
@@ -117,15 +125,6 @@ public class SeleniumBase {
 		}
 	}
 
-	//This method is to scroll for a particular element to be visible
-	public void scrollToElementVisible(WebDriver driver, By locator) 
-	{
-		//Scrolling till the button got visible 
-		Coordinates coordinate = ((Locatable)findElement(driver, locator)).getCoordinates(); 
-		coordinate.inViewPort();
-		waitUntilVisible(driver, locator);
-	}
-	
 	public void idleWait(int seconds) {
 		try {
 			Thread.sleep(seconds*1000);
@@ -155,6 +154,11 @@ public class SeleniumBase {
 		catch(Exception e){
 			System.out.print(e.getMessage());
 		}
+	}
+	
+	public void switchToIframe(WebDriver driver, By locator) {
+		waitUntilVisible(driver, locator, 10);
+		driver.switchTo().frame(findElement(driver, locator));
 	}
 	
 

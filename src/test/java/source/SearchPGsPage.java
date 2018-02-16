@@ -10,18 +10,25 @@ import org.openqa.selenium.support.ui.Select;
 import base.SeleniumBase;
 
 public class SearchPGsPage extends SeleniumBase{
-	
+
 	By headerUserName 				= By.cssSelector(".headerUserName");
 	By budgetSelect   				= By.cssSelector("select[ng-model='budget']");
 	By sharingPreferencesSelect   	= By.cssSelector("select[ng-model='preference']");
 	By pgTypeSelect   				= By.id("gender-drpdwn");
 	By pgNamesHeading				= By.cssSelector("h2.text-left.ng-binding");
 	By filterLink					= By.cssSelector("a.handleFilter");
-	
+	By homePageLink					= By.cssSelector(".logo a[href='/']");
+
+	public void goToHomePage(WebDriver driver) {
+		if(findElement(driver, homePageLink)!=null && findElement(driver, homePageLink).isDisplayed()){
+			clickElement(driver, homePageLink);
+		}
+	}
+
 	public void verifyHeaderUserNameVisible(WebDriver driver) {
 		waitUntilVisible(driver, headerUserName);
 	}
-	
+
 	public void setBudgetFilter(WebDriver driver, String textValue) {
 		setFilter(driver, textValue, budgetSelect);
 	}
@@ -33,18 +40,18 @@ public class SearchPGsPage extends SeleniumBase{
 	public void setPgTypeFilter(WebDriver driver, String textValue) {
 		setFilter(driver, textValue, pgTypeSelect);
 	}
-	
+
 	public void setFilter(WebDriver driver, String textValue, By locator) {
 		waitUntilVisible(driver, locator);
 		Select select = new Select(findElement(driver, locator));
 		select.selectByVisibleText(textValue);
 	}
-	
+
 	public void clickFilterLink(WebDriver driver) {
 		clickElement(driver, filterLink);
 		waitUntilVisible(driver, pgNamesHeading);
 	}
-	
+
 	public void openPgDetails(WebDriver driver, String pgName) {
 		waitUntilVisible(driver, pgNamesHeading);
 		idleWait(2);

@@ -6,12 +6,17 @@ import java.util.Properties;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
-public class TestBase {
+import source.ChatPage;
+import source.HomePage;
 
-	
+public class TestBase extends SeleniumBase {
+
+	ChatPage chatPage = new ChatPage();
+	HomePage homePage = new HomePage();
 	public static WebDriver driver = null;
 	public static Properties config = new Properties();
 		
@@ -21,11 +26,24 @@ public class TestBase {
 		initializeDriver();
 		openWebSite();
 	}
-	
+		
+	@AfterMethod
+	public void navigateToHomePage() {
+		System.out.println("I am in after method");
+		driver.get(driver.getCurrentUrl());
+		homePage.navigateToHomePage(driver);
+	}
 	
 	//open website
 	public void openWebSite() {
 		driver.get(config.getProperty("zolo_website_url"));
+		idleWait(10);
+		chatPage.switchToIframe(driver);
+		driver.switchTo().activeElement();
+		if(chatPage.verifyChatOpen(driver)) {
+			chatPage.closeChatIfOpen(driver);
+		}
+		switchToTab(driver, 1);
 	}
 
 	// This method is to initialize driver
@@ -51,8 +69,7 @@ public class TestBase {
 		}
 	}
 	
-	
-	//@AfterSuite()
+	@AfterSuite()
 	public void quitDriver()
 	{
 		if(driver!=null) {

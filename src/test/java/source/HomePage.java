@@ -1,7 +1,7 @@
 package source;
 
 import java.util.List;
-
+import source.SearchPGsPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,7 +16,13 @@ public class HomePage extends SeleniumBase {
 	By searchBar				= By.id("searchBar");
 	By searchResults			= By.className("ui-menu-item-wrapper");
 	By searchIcon				= By.cssSelector(".search-btn-text");
+	
 
+	public void navigateToHomePage(WebDriver driver) {
+		searchPGsPage.goToHomePage(driver);
+		verifyTestAccountLink(driver);
+	}
+	
 	//This method is to verify user is logged in
 	public boolean isUserLoggedIn(WebDriver driver) {
 		if(findElement(driver, testAccountLink)!=null && findElement(driver, testAccountLink).isDisplayed()) {
@@ -24,7 +30,13 @@ public class HomePage extends SeleniumBase {
 		}
 		return false;
 	}
+	
+	//verify test account link visible 
+	public void verifyTestAccountLink(WebDriver driver) {
+		waitUntilVisible(driver, testAccountLink);
+	}
 
+	
 	//This method is to enter the search term
 	public void enterSearchTerm(WebDriver driver, String searchTerm) {
 		enterText(driver, searchBar, searchTerm);
